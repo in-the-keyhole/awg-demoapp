@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    kubernetes:
+      enabled: true
+      config:
+        enabled: true
+        enable-api: true
+        namespace: ${KUBERNETES_NAMESPACE}
+        sources:
+        - name: ${KUBERNETES_CONFIGMAP_NAME}
+      reload:
+        enabled: false
+        mode: polling
+        period: 5000
+        strategy: refresh
+      secrets:
+        enabled: true
+        enable-api: false
+        namespace: ${KUBERNETES_NAMESPACE}
+        name: ${KUBERNETES_SECRET_NAME}
+        paths:
+        - /etc/secrets/awg-demo-caller

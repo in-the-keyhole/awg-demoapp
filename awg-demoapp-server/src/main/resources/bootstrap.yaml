@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: awg-demo-server
+  cloud:
+    kubernetes:
+      enabled: false
+      config:
+        enabled: false
+      secrets:
+        enabled: false
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          kubernetes: debug

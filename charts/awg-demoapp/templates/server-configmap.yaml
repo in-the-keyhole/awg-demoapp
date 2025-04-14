@@ -1,0 +1,1 @@
+{{ include "awg-demoapp.component.configmap" (dict "componentName" "server" "context" $) }}
