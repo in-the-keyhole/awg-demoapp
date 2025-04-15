@@ -11,7 +11,7 @@
 		<relativePath />
 	</parent>
 	<groupId>com.awginc.demoapp</groupId>
-	<artifactId>caller</artifactId>
+	<artifactId>awg-demoapp-caller</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>awg-demoapp-caller</name>
 	<description>Demo project for Spring Boot</description>
