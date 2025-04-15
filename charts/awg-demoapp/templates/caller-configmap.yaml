@@ -1,1 +1,1 @@
-{{ include "awg-demoapp.component.configmap" (dict "componentName" "caller" "context" $) }}
+{{ include "awg-demoapp.component.spring-configmap" (dict "componentName" "caller" "context" $) }}

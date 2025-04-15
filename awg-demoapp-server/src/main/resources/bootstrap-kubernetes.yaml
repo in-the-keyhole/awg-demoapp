@@ -7,16 +7,11 @@ spring:
         enable-api: true
         namespace: ${KUBERNETES_NAMESPACE}
         sources:
-        - name: ${KUBERNETES_CONFIGMAP_NAME}
+        - name: ${KUBERNETES_NAME}
+        - name: ${KUBERNETES_NAME}-servicebus
+        - name: ${KUBERNETES_NAME}-storage
       reload:
         enabled: false
         mode: polling
         period: 5000
         strategy: refresh
-      secrets:
-        enabled: true
-        enable-api: false
-        namespace: ${KUBERNETES_NAMESPACE}
-        name: ${KUBERNETES_SECRET_NAME}
-        paths:
-        - /etc/secrets/awg-demo-server

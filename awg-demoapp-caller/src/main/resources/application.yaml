@@ -12,5 +12,5 @@ spring:
   cloud:
     kubernetes:
       config:
-        namespace: ${KUBERNETES_NAMESPACE}
-        name: ${spring.application.name}
+        sources:
+        - name: ${spring.application.name}

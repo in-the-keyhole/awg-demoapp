@@ -1,6 +1,6 @@
 spring:
   application:
-    name: awg-demo-caller
+    name: awg-demoapp-caller
   cloud:
     kubernetes:
       enabled: false

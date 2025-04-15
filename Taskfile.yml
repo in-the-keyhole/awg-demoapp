@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.3
+  VERSION: 0.0.5
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -11,7 +11,41 @@ tasks:
   # logs into the ACR repository
   login-acr:
     cmds:
-      - az acr login -n {{ .REPOSITORY }}
+    - az acr login -n {{ .REPOSITORY }}
+
+  build-awg-demoapp-landing:
+    run: when_changed
+    sources:
+    - ../awg-monorepo/dist/apps/main-access/**/*
+    generates:
+    - "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+    cmds:
+    - mkdir -p .temp
+    - tar -cf .temp/a.tar -C ../awg-monorepo/dist/apps/main-access --transform 's,^,/home/static/,' .
+    - crane append -b busybox -t {{ .VERSION }} -f .temp/a.tar -o "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+
+  publish-awg-demoapp-landing:
+    deps:
+      - build-awg-demoapp-landing
+    cmds:
+      - crane push {{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/landing:{{ .VERSION }}
+
+  build-awg-demoapp-store-master:
+    run: when_changed
+    sources:
+    - ../awg-monorepo/dist/apps/store-master/**/*
+    generates:
+    - "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+    cmds:
+    - mkdir -p .temp
+    - tar -cf .temp/b.tar -C ../awg-monorepo/dist/apps/store-master --transform 's,^,/home/static/,' .
+    - crane append -b busybox -t {{ .VERSION }} -f .temp/b.tar -o "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+
+  publish-awg-demoapp-store-master:
+    deps:
+      - build-awg-demoapp-store-master
+    cmds:
+      - crane push {{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/store-master:{{ .VERSION }}
 
   build-awg-demoapp-caller:
     run: when_changed
@@ -99,12 +133,16 @@ tasks:
 
   build:
     deps:
+      - build-awg-demoapp-landing
+      - build-awg-demoapp-store-master
       - build-awg-demoapp-caller
       - build-awg-demoapp-server
       - build-charts
 
   publish:
     deps:
+      - publish-awg-demoapp-landing
+      - publish-awg-demoapp-store-master
       - publish-awg-demoapp-caller
       - publish-awg-demoapp-server
       - publish-charts

@@ -31,6 +31,27 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
+                name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "landing" "context" $) }}
+                port:
+                  number: 8080
+          - path: /landing
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "landing" "context" $) }}
+                port:
+                  number: 8080
+          - path: /store-master
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "store-master" "context" $) }}
+                port:
+                  number: 8080
+          - path: /server
+            pathType: ImplementationSpecific
+            backend:
+              service:
                 name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "server" "context" $) }}
                 port:
                   number: 8080

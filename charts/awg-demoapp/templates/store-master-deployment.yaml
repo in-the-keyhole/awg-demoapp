@@ -1,0 +1,1 @@
+{{ include "awg-demoapp.component.static-deployment" (dict "componentName" "store-master" "context" $) }}

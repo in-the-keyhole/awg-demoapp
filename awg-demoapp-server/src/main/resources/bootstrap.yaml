@@ -1,6 +1,6 @@
 spring:
   application:
-    name: awg-demo-server
+    name: awg-demoapp-server
   cloud:
     kubernetes:
       enabled: false

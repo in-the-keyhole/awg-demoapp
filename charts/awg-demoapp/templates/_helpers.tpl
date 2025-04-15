@@ -109,7 +109,7 @@ app.kubernetes.io/component: {{ .componentName }}
 {{/*
 Deployment template of a Spring Boot application.
 */}}
-{{- define "awg-demoapp.component.deployment" -}}
+{{- define "awg-demoapp.component.spring-deployment" -}}
 {{- $r := (dict "componentName" .componentName "context" .context) -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -118,9 +118,7 @@ metadata:
   labels:
     {{- include "awg-demoapp.component.labels" $r | nindent 4 }}
 spec:
-  {{- if not .context.Values.autoscaling.enabled }}
   replicas: {{ .context.Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "awg-demoapp.component.selectorLabels" $r | nindent 6 }}
@@ -155,12 +153,8 @@ spec:
           imagePullPolicy: {{ .context.Values.image.pullPolicy }}
           env:
             - name: KUBERNETES_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: "metadata.namespace"
-            - name: KUBERNETES_CONFIGMAP_NAME
-              value: {{ include "awg-demoapp.component.fullname" $r }}
-            - name: KUBERNETES_SECRET_NAME
+              value: {{ .context.Release.Namespace }}
+            - name: KUBERNETES_NAME
               value: {{ include "awg-demoapp.component.fullname" $r }}
             - name: SPRING_PROFILES_INCLUDE
               value: kubernetes
@@ -176,10 +170,6 @@ spec:
             httpGet:
               port: 8080
               path: "/actuator/health/liveness"
-          {{- with .context.Values.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
       {{- with .context.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -197,7 +187,7 @@ spec:
 {{/*
 ConfigMap template of a Spring Boot application.
 */}}
-{{- define "awg-demoapp.component.configmap" -}}
+{{- define "awg-demoapp.component.spring-configmap" -}}
 {{- $r := (dict "componentName" .componentName "context" .context) -}}
 apiVersion: v1
 kind: ConfigMap
@@ -231,4 +221,77 @@ spec:
   selector:
     {{- include "awg-demoapp.component.selectorLabels" $r | nindent 4 }}
 ---
+{{- end }}
+
+{{/*
+Deployment template of a simple static web application.
+*/}}
+{{- define "awg-demoapp.component.static-deployment" -}}
+{{- $r := (dict "componentName" .componentName "context" .context) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "awg-demoapp.component.fullname" $r }}
+  labels:
+    {{- include "awg-demoapp.component.labels" $r | nindent 4 }}
+spec:
+  replicas: {{ .context.Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "awg-demoapp.component.selectorLabels" $r | nindent 6 }}
+  template:
+    metadata:
+      {{- with .context.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "awg-demoapp.component.labels" $r | nindent 8 }}
+        {{- with .context.Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .context.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "awg-demoapp.serviceAccountName" .context }}
+      {{- with .context.Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .context.Chart.Name }}
+          {{- with .context.Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .context.Values.image.repository }}/{{ .componentName }}:{{ .context.Values.image.tag | default .context.Chart.AppVersion }}"
+          imagePullPolicy: {{ .context.Values.image.pullPolicy }}
+          workingDir: /home/static
+          command: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: "/"
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: "/"
+      {{- with .context.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .context.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .context.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
