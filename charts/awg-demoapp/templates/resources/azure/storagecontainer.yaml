@@ -1,11 +1,17 @@
-# apiVersion: azure.appdev.awginc.com/v1alpha1
-# kind: StorageContainer
-# metadata:
-#   name: {{ include "awg-demoapp.fullname" . }}
-#   labels:
-#     {{- include "awg-demoapp.labels" . | nindent 4 }}
-# spec:
-#   writeAccountNameTo:
-#     configMap:
-#       name: {{ include "awg-demoapp.fullname" . }}-properties
-#       key: spring.cloud.azure.storage.account-name
+{{/*
+
+apiVersion: azure.appdev.awginc.com/v1alpha1
+kind: StorageContainer
+metadata:
+  name: {{ include "awg-demoapp.fullname" . }}
+  labels:
+    {{- include "awg-demoapp.labels" . | nindent 4 }}
+spec:
+  applicationRef:
+    {{ include "awg-demoapp.fullname" . }}
+  writeAccountNameTo:
+    configMap:
+      name: {{ include "awg-demoapp.fullname" . }}-properties
+      key: spring.cloud.azure.storage.account-name
+
+*/}}

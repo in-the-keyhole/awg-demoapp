@@ -24,11 +24,17 @@ podLabels: {}
 podSecurityContext: {}
 securityContext: {}
 
-ingress:
-  enabled: true
-  className: "istio"
+gateway:
+  enabled: false
+  className: ""
   annotations: {}
-  host: awg-demoapp.local
+  hostnames: []
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
   tls: []
 
 nodeSelector: {}

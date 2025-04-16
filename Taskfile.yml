@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.5
+  VERSION: 0.0.26
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -14,14 +14,14 @@ tasks:
     - az acr login -n {{ .REPOSITORY }}
 
   build-awg-demoapp-landing:
-    run: when_changed
     sources:
     - ../awg-monorepo/dist/apps/main-access/**/*
     generates:
     - "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
     cmds:
     - mkdir -p .temp
-    - tar -cf .temp/a.tar -C ../awg-monorepo/dist/apps/main-access --transform 's,^,/home/static/,' .
+    - rm -f .temp/a.tar "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+    - tar -cf .temp/a.tar -C ../awg-monorepo/dist/apps/main-access --transform 's,^,/var/www/html/landing/,' .
     - crane append -b busybox -t {{ .VERSION }} -f .temp/a.tar -o "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
 
   publish-awg-demoapp-landing:
@@ -31,14 +31,14 @@ tasks:
       - crane push {{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/landing:{{ .VERSION }}
 
   build-awg-demoapp-store-master:
-    run: when_changed
     sources:
     - ../awg-monorepo/dist/apps/store-master/**/*
     generates:
     - "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
     cmds:
     - mkdir -p .temp
-    - tar -cf .temp/b.tar -C ../awg-monorepo/dist/apps/store-master --transform 's,^,/home/static/,' .
+    - rm -f .temp/b.tar "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+    - tar -cf .temp/b.tar -C ../awg-monorepo/dist/apps/store-master --transform 's,^,/var/www/html/store-master/,' .
     - crane append -b busybox -t {{ .VERSION }} -f .temp/b.tar -o "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
 
   publish-awg-demoapp-store-master:
@@ -48,7 +48,6 @@ tasks:
       - crane push {{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/store-master:{{ .VERSION }}
 
   build-awg-demoapp-caller:
-    run: when_changed
     sources:
       - awg-demoapp-caller/pom.xml
       - awg-demoapp-caller/src/**/*
@@ -66,7 +65,6 @@ tasks:
       - crane push {{ .DISTDIR }}/awg-demoapp-caller-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/caller:{{ .VERSION }}
 
   build-awg-demoapp-server:
-    run: when_changed
     sources:
       - awg-demoapp-server/pom.xml
       - awg-demoapp-server/src/**/*
@@ -85,7 +83,6 @@ tasks:
 
   # reusable task which builds a Helm chart by a name given by the CHART variable
   build-chart:
-    run: when_changed
     requires:
       vars:
         - CHART
@@ -111,7 +108,6 @@ tasks:
   
   # reusable task which publishes a Helm chart by a name given by the CHART variable
   publish-chart:
-    run: when_changed
     deps:
       - task: build-chart
         vars:

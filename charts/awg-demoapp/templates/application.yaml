@@ -1,8 +1,0 @@
-apiVersion: appdev.awginc.com/v1alpha1
-kind: Application
-metadata:
-  name: {{ include "awg-demoapp.fullname" . }}
-spec:
-  name: {{ include "awg-demoapp.fullname" . }}
-  metadataLocation: {{ .Values.metadataLocation }}
-  defaultResourceLocation: {{ .Values.defaultResourceLocation }}

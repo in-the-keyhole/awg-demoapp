@@ -1,12 +1,18 @@
-# apiVersion: azure.appdev.awginc.com/v1alpha1
-# kind: ServiceBus
-# metadata:
-#   name: {{ include "awg-demoapp.fullname" . }}
-#   labels:
-#     {{- include "awg-demoapp.labels" . | nindent 4 }}
-# spec:
-#   size: Large
-#   writeNamespaceTo:
-#     configMap:
-#       name: {{ include "awg-demoapp.fullname" . }}-properties
-#       key: spring.cloud.azure.servicebus.namespace
+{{/*
+
+apiVersion: azure.appdev.awginc.com/v1alpha1
+kind: ServiceBus
+metadata:
+  name: {{ include "awg-demoapp.fullname" . }}
+  labels:
+    {{- include "awg-demoapp.labels" . | nindent 4 }}
+spec:
+  applicationRef:
+    {{ include "awg-demoapp.fullname" . }}
+  size: Large
+  writeNamespaceTo:
+    configMap:
+      name: {{ include "awg-demoapp.fullname" . }}-properties
+      key: spring.cloud.azure.servicebus.namespace
+
+*/}}

@@ -1,1 +1,57 @@
-{{ include "awg-demoapp.component.static-deployment" (dict "componentName" "landing" "context" $) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "landing" "context" $) }}
+  labels:
+    {{- include "awg-demoapp.component.labels" (dict "componentName" "landing" "context" $) | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "awg-demoapp.component.selectorLabels" (dict "componentName" "landing" "context" $) | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "awg-demoapp.component.labels" (dict "componentName" "landing" "context" $) | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "awg-demoapp.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}/landing:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["busybox", "httpd", "-v", "-f", "-h", "/var/www/html", "-p", "8080"]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
