@@ -2,6 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 application:
+  name: demoapp
   metadataLocation: northcentralus
   defaultResourceLocation: southcentralus
 
@@ -25,17 +26,10 @@ podSecurityContext: {}
 securityContext: {}
 
 gateway:
-  enabled: false
+  enabled: true
   className: ""
   annotations: {}
   hostnames: []
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts: []
-  tls: []
 
 nodeSelector: {}
 tolerations: []

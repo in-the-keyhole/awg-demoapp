@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.26
+  VERSION: 0.0.35
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -15,14 +15,18 @@ tasks:
 
   build-awg-demoapp-landing:
     sources:
+    - Taskfile.yml
+    - nginx.conf
     - ../awg-monorepo/dist/apps/main-access/**/*
     generates:
     - "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
     cmds:
-    - mkdir -p .temp
-    - rm -f .temp/a.tar "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
-    - tar -cf .temp/a.tar -C ../awg-monorepo/dist/apps/main-access --transform 's,^,/var/www/html/landing/,' .
-    - crane append -b busybox -t {{ .VERSION }} -f .temp/a.tar -o "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+    - rm -rf .temp/landing
+    - mkdir -p .temp/landing/usr/share/nginx/html .temp/landing/etc/nginx/conf.d
+    - cp -r ../awg-monorepo/dist/apps/main-access/* .temp/landing/usr/share/nginx/html
+    - cp -r nginx.conf .temp/landing/etc/nginx/conf.d/default.conf
+    - tar -c -C .temp/landing . -f .temp/landing.tar
+    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/landing.tar -o "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
 
   publish-awg-demoapp-landing:
     deps:
@@ -32,14 +36,18 @@ tasks:
 
   build-awg-demoapp-store-master:
     sources:
+    - Taskfile.yml
+    - nginx.conf
     - ../awg-monorepo/dist/apps/store-master/**/*
     generates:
     - "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
     cmds:
-    - mkdir -p .temp
-    - rm -f .temp/b.tar "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
-    - tar -cf .temp/b.tar -C ../awg-monorepo/dist/apps/store-master --transform 's,^,/var/www/html/store-master/,' .
-    - crane append -b busybox -t {{ .VERSION }} -f .temp/b.tar -o "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+    - rm -rf .temp/store-master
+    - mkdir -p .temp/store-master/usr/share/nginx/html .temp/store-master/etc/nginx/conf.d
+    - cp -r ../awg-monorepo/dist/apps/store-master/* .temp/store-master/usr/share/nginx/html
+    - cp -r nginx.conf .temp/store-master/etc/nginx/conf.d/default.conf
+    - tar -c -C .temp/store-master . -f .temp/store-master.tar
+    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/store-master.tar -o "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
 
   publish-awg-demoapp-store-master:
     deps:
@@ -49,6 +57,7 @@ tasks:
 
   build-awg-demoapp-caller:
     sources:
+      - Taskfile.yaml
       - awg-demoapp-caller/pom.xml
       - awg-demoapp-caller/src/**/*
     generates:
@@ -66,6 +75,7 @@ tasks:
 
   build-awg-demoapp-server:
     sources:
+      - Taskfile.yaml
       - awg-demoapp-server/pom.xml
       - awg-demoapp-server/src/**/*
     generates:

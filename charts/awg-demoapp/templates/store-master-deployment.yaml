@@ -38,7 +38,6 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}/store-master:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["busybox", "httpd", "-v", "-f", "-h", "/var/www/html", "-p", "8080"]
           ports:
             - name: http
               containerPort: 8080

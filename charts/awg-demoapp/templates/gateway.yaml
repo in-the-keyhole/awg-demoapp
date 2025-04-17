@@ -13,9 +13,6 @@ spec:
   {{- with .Values.gateway.className }}
   gatewayClassName: {{ . }}
   {{- end }}
-  addresses:
-  - value: aks-istio-ingressgateway-internal
-    type: Hostname
   {{- range .Values.gateway.hostnames }}
   listeners:
   - name: http

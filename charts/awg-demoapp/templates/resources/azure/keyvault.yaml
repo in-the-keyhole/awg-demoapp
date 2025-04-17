@@ -1,5 +1,5 @@
-apiVersion: servicebus.azure.appdev.awginc.com/v1alpha1
-kind: Namespace
+apiVersion: keyvault.azure.appdev.awginc.com/v1alpha1
+kind: Vault
 metadata:
   name: {{ include "awg-demoapp.fullname" . }}
   labels:

@@ -1,5 +1,5 @@
-apiVersion: servicebus.azure.appdev.awginc.com/v1alpha1
-kind: Namespace
+apiVersion: storage.azure.appdev.awginc.com/v1alpha1
+kind: Account
 metadata:
   name: {{ include "awg-demoapp.fullname" . }}
   labels:
