@@ -8,9 +8,6 @@ management:
       web:
         exposure:
             include: '*'
-spring:
-  cloud:
-    kubernetes:
-      config:
-        sources:
-        - name: ${spring.application.name}
+conf:
+  servicebus:
+    endpoint: ${CONF_SERVICEBUS_ENDPOINT}

@@ -7,3 +7,5 @@ metadata:
 spec:
   applicationRef:
     name: {{ include "awg-demoapp.fullname" . }}
+  writeConnectionSecretToRef:
+    name: {{ include "awg-demoapp.fullname" . }}-keyvault

@@ -20,6 +20,8 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        appdev.awginc.com/application: {{ include "awg-demoapp.fullname" . }}
+        azure.workload.identity/use: "true"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

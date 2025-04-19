@@ -14,3 +14,7 @@ spring:
       config:
         sources:
         - name: ${spring.application.name}
+
+conf:
+  servicebus:
+    endpoint: ${CONF_SERVICEBUS_ENDPOINT}

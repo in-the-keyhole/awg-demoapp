@@ -2,28 +2,19 @@ package com.awginc.demoapp.server;
 
 import java.util.Random;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-@RestController
-public class AwgDemoServerApplication {
+import jakarta.servlet.http.HttpServletResponse;
 
+public class DemoRestController {
+    
 	@Autowired
 	private Environment env;
 
 	public static final String[] NAMES = new String[] {"Paul", "John", "Ringo", "George"};
 	private static final Random r = new Random();
-
-	public static void main(String[] args) {
-		SpringApplication.run(AwgDemoServerApplication.class, args);
-	}
 
 	@GetMapping("helloWorld")
 	public String helloWorld() {

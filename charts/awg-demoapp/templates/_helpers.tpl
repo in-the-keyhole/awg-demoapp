@@ -133,6 +133,8 @@ spec:
         {{- with .context.Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        appdev.awginc.com/application: {{ include "awg-demoapp.fullname" .context }}
+        azure.workload.identity/use: "true"
     spec:
       {{- with .context.Values.imagePullSecrets }}
       imagePullSecrets:
@@ -158,6 +160,11 @@ spec:
               value: {{ include "awg-demoapp.component.fullname" $r }}
             - name: SPRING_PROFILES_INCLUDE
               value: kubernetes
+            - name: CONF_SERVICEBUS_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "awg-demoapp.fullname" .context }}-servicebus
+                  key: endpoint
           ports:
             - name: http
               containerPort: 8080

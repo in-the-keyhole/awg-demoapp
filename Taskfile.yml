@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.35
+  VERSION: 0.0.41
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
