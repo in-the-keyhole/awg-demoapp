@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: awg-demoapp-server
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          kubernetes: debug

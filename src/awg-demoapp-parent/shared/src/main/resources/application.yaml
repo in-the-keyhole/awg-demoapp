@@ -1,0 +1,13 @@
+management:
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      show-details: always  
+  endpoints:
+      web:
+        exposure:
+            include: '*'
+conf:
+  servicebus:
+    endpoint: ${CONF_SERVICEBUS_ENDPOINT}

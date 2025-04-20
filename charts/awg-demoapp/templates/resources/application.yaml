@@ -8,3 +8,5 @@ spec:
   name: {{ .Values.application.name }}
   metadataLocation: {{ .Values.application.metadataLocation }}
   defaultResourceLocation: {{ .Values.application.defaultResourceLocation }}
+  serviceAccount:
+    name: {{ include "awg-demoapp.fullname" . }}

@@ -12,25 +12,20 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
 replicaCount: 1
 
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
+
+nodeSelector: {}
+
 securityContext: {}
+tolerations: []
+affinity: {}
 
 gateway:
   enabled: true
   className: ""
   annotations: {}
   hostnames: []
-
-nodeSelector: {}
-tolerations: []
-affinity: {}

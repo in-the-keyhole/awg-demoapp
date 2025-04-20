@@ -4,6 +4,7 @@ metadata:
   name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "landing" "context" $) }}
   labels:
     {{- include "awg-demoapp.component.labels" (dict "componentName" "landing" "context" $) | nindent 4 }}
+    appdev.awginc.com/application: {{ include "awg-demoapp.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -20,20 +21,18 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        appdev.awginc.com/application: {{ include "awg-demoapp.fullname" . }}
-        azure.workload.identity/use: "true"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "awg-demoapp.serviceAccountName" . }}
+      serviceAccountName: {{ include "awg-demoapp.fullname" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: container
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}

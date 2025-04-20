@@ -51,17 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "awg-demoapp.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "awg-demoapp.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Create a default fully qualified component name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -117,6 +106,7 @@ metadata:
   name: {{ include "awg-demoapp.component.fullname" $r }}
   labels:
     {{- include "awg-demoapp.component.labels" $r | nindent 4 }}
+    appdev.awginc.com/application: {{ include "awg-demoapp.fullname" .context }}
 spec:
   replicas: {{ .context.Values.replicaCount }}
   selector:
@@ -133,20 +123,18 @@ spec:
         {{- with .context.Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        appdev.awginc.com/application: {{ include "awg-demoapp.fullname" .context }}
-        azure.workload.identity/use: "true"
     spec:
       {{- with .context.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "awg-demoapp.serviceAccountName" .context }}
+      serviceAccountName: {{ include "awg-demoapp.fullname" .context }}
       {{- with .context.Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .context.Chart.Name }}
+        - name: java
           {{- with .context.Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
