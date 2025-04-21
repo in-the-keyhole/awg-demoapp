@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.59
+  VERSION: 0.0.61
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -13,83 +13,83 @@ tasks:
     cmds:
     - az acr login -n {{ .REPOSITORY }}
 
-  build-awg-demoapp-landing:
+  build-landing:
     sources:
     - Taskfile.yml
     - nginx.conf
     - ../awg-monorepo/dist/apps/main-access/**/*
     generates:
-    - "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+    - "{{ .DISTDIR }}/landing-{{ .VERSION }}.tar"
     cmds:
     - rm -rf .temp/landing
     - mkdir -p .temp/landing/usr/share/nginx/html .temp/landing/etc/nginx/conf.d
     - cp -r ../awg-monorepo/dist/apps/main-access/* .temp/landing/usr/share/nginx/html
     - cp -r nginx.conf .temp/landing/etc/nginx/conf.d/default.conf
     - tar -c -C .temp/landing . -f .temp/landing.tar
-    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/landing.tar -o "{{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar"
+    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/landing.tar -o "{{ .DISTDIR }}/landing-{{ .VERSION }}.tar"
 
-  publish-awg-demoapp-landing:
+  publish-landing:
     deps:
-      - build-awg-demoapp-landing
+      - build-landing
     cmds:
-      - crane push {{ .DISTDIR }}/awg-demoapp-landing-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/landing:{{ .VERSION }}
+      - crane push {{ .DISTDIR }}/landing-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/landing:{{ .VERSION }}
 
-  build-awg-demoapp-store-master:
+  build-store-master:
     sources:
     - Taskfile.yml
     - nginx.conf
     - ../awg-monorepo/dist/apps/store-master/**/*
     generates:
-    - "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+    - "{{ .DISTDIR }}/store-master-{{ .VERSION }}.tar"
     cmds:
     - rm -rf .temp/store-master
     - mkdir -p .temp/store-master/usr/share/nginx/html .temp/store-master/etc/nginx/conf.d
     - cp -r ../awg-monorepo/dist/apps/store-master/* .temp/store-master/usr/share/nginx/html
     - cp -r nginx.conf .temp/store-master/etc/nginx/conf.d/default.conf
     - tar -c -C .temp/store-master . -f .temp/store-master.tar
-    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/store-master.tar -o "{{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar"
+    - crane append -b nginx:alpine -t {{ .VERSION }} -f .temp/store-master.tar -o "{{ .DISTDIR }}/store-master-{{ .VERSION }}.tar"
 
-  publish-awg-demoapp-store-master:
+  publish-store-master:
     deps:
-      - build-awg-demoapp-store-master
+      - build-store-master
     cmds:
-      - crane push {{ .DISTDIR }}/awg-demoapp-store-master-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/store-master:{{ .VERSION }}
+      - crane push {{ .DISTDIR }}/store-master-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/store-master:{{ .VERSION }}
 
-  build-awg-demoapp-caller:
+  build-caller:
     sources:
       - Taskfile.yaml
-      - awg-demoapp-caller/pom.xml
-      - awg-demoapp-caller/src/**/*
+      - shared/**/*
+      - caller/**/*
     generates:
-      - awg-demoapp-caller/target/jib-image.tar
-      - "{{ .DISTDIR }}/awg-demoapp-caller-{{ .VERSION }}.tar"
+      - caller/target/jib-image.tar
+      - "{{ .DISTDIR }}/caller-{{ .VERSION }}.tar"
     cmds:
-      - mvn -f awg-demoapp-caller/pom.xml clean compile jib:buildTar
-      - cp awg-demoapp-caller/target/jib-image.tar {{ .DISTDIR }}/awg-demoapp-caller-{{ .VERSION }}.tar
+      - mvn -pl caller clean compile jib:buildTar -Drevision={{ .VERSION }}
+      - cp caller/target/jib-image.tar {{ .DISTDIR }}/caller-{{ .VERSION }}.tar
 
-  publish-awg-demoapp-caller:
+  publish-caller:
     deps:
-      - build-awg-demoapp-caller
+      - build-caller
     cmds:
-      - crane push {{ .DISTDIR }}/awg-demoapp-caller-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/caller:{{ .VERSION }}
+      - crane push {{ .DISTDIR }}/caller-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/caller:{{ .VERSION }}
 
-  build-awg-demoapp-server:
+  build-server:
     sources:
       - Taskfile.yaml
-      - awg-demoapp-server/pom.xml
-      - awg-demoapp-server/src/**/*
+      - shared/**/*
+      - server/**/*
     generates:
-      - awg-demoapp-server/target/jib-image.tar
-      - "{{ .DISTDIR }}/awg-demoapp-server-{{ .VERSION }}.tar"
+      - server/target/jib-image.tar
+      - "{{ .DISTDIR }}/server-{{ .VERSION }}.tar"
     cmds:
-      - mvn -f awg-demoapp-server/pom.xml clean compile jib:buildTar
-      - cp awg-demoapp-server/target/jib-image.tar {{ .DISTDIR }}/awg-demoapp-server-{{ .VERSION }}.tar
+      - mvn -pl server clean compile jib:buildTar -Drevision={{ .VERSION }}
+      - cp server/target/jib-image.tar {{ .DISTDIR }}/server-{{ .VERSION }}.tar
 
-  publish-awg-demoapp-server:
+  publish-server:
     deps:
-      - build-awg-demoapp-server
+      - build-server
     cmds:
-      - crane push {{ .DISTDIR }}/awg-demoapp-server-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/server:{{ .VERSION }}
+      - crane push {{ .DISTDIR }}/server-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/server:{{ .VERSION }}
 
   # reusable task which builds a Helm chart by a name given by the CHART variable
   build-chart:
@@ -139,18 +139,18 @@ tasks:
 
   build:
     deps:
-      - build-awg-demoapp-landing
-      - build-awg-demoapp-store-master
-      - build-awg-demoapp-caller
-      - build-awg-demoapp-server
+      - build-landing
+      - build-store-master
+      - build-caller
+      - build-server
       - build-charts
 
   publish:
     deps:
-      - publish-awg-demoapp-landing
-      - publish-awg-demoapp-store-master
-      - publish-awg-demoapp-caller
-      - publish-awg-demoapp-server
+      - publish-landing
+      - publish-store-master
+      - publish-caller
+      - publish-server
       - publish-charts
 
   default:
