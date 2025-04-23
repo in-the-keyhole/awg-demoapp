@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "awg-demoapp.labels" . | nindent 4 }}
 spec:
-  name: {{ .Values.application.name }}
-  metadataLocation: {{ .Values.application.metadataLocation }}
-  defaultResourceLocation: {{ .Values.application.defaultResourceLocation }}
+  name: {{ .Values.application.name | required "Required application.name" }}
+  metadataLocation: {{ .Values.application.metadataLocation | required "Required application.metadataLocation" }}
+  defaultResourceLocation: {{ .Values.application.defaultResourceLocation | required "Required application.defaultResourceLocation" }}
   serviceAccount:
     name: {{ include "awg-demoapp.fullname" . }}
