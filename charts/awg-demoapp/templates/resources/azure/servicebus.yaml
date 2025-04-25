@@ -9,4 +9,3 @@ spec:
     name: {{ include "awg-demoapp.fullname" . }}
   writeConnectionSecretToRef:
     name: {{ include "awg-demoapp.fullname" . }}-servicebus
-  

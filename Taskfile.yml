@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.65
+  VERSION: 0.0.66
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -64,7 +64,7 @@ tasks:
       - caller/target/jib-image.tar
       - "{{ .DISTDIR }}/caller-{{ .VERSION }}.tar"
     cmds:
-      - mvn -pl caller clean compile jib:buildTar -Drevision={{ .VERSION }}
+      - mvn -pl caller clean compile jib:buildTar
       - cp caller/target/jib-image.tar {{ .DISTDIR }}/caller-{{ .VERSION }}.tar
 
   publish-caller:
@@ -82,7 +82,7 @@ tasks:
       - server/target/jib-image.tar
       - "{{ .DISTDIR }}/server-{{ .VERSION }}.tar"
     cmds:
-      - mvn -pl server clean compile jib:buildTar -Drevision={{ .VERSION }}
+      - mvn -pl server clean compile jib:buildTar
       - cp server/target/jib-image.tar {{ .DISTDIR }}/server-{{ .VERSION }}.tar
 
   publish-server:

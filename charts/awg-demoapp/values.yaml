@@ -35,4 +35,3 @@ certificate:
     group: cert-manager.io
     kind: ClusterIssuer
     name: internal
-    
