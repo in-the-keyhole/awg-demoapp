@@ -51,16 +51,16 @@ public class ServiceBusClientFactory {
         }
 
         return new ServiceBusAdministrationClientBuilder()
-                .endpoint(endpoint)
-                .credential(new DefaultAzureCredentialBuilder().build())
-                .buildClient();
+            .endpoint(endpoint)
+            .credential(new DefaultAzureCredentialBuilder().build())
+            .buildClient();
     }
 
     @Bean
     public ServiceBusClientBuilder createServiceBusClientBuilder() throws Exception {
         return new ServiceBusClientBuilder()
-                .fullyQualifiedNamespace(getFullyQualifiedNamespace())
-                .credential(new DefaultAzureCredentialBuilder().build());
+            .fullyQualifiedNamespace(getFullyQualifiedNamespace())
+            .credential(new DefaultAzureCredentialBuilder().build());
     }
 
 }

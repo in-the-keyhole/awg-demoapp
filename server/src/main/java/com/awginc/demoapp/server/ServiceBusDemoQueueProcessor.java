@@ -42,13 +42,13 @@ public class ServiceBusDemoQueueProcessor {
         }
 
         processor = client
-                .processor()
-                .queueName("demo_queue")
-                .receiveMode(ServiceBusReceiveMode.PEEK_LOCK)
-                .disableAutoComplete()
-                .processMessage(processMessage)
-                .processError(processError)
-                .buildProcessorClient();
+            .processor()
+            .queueName("demo_queue")
+            .receiveMode(ServiceBusReceiveMode.PEEK_LOCK)
+            .disableAutoComplete()
+            .processMessage(processMessage)
+            .processError(processError)
+            .buildProcessorClient();
 
         processor.start();
     }
