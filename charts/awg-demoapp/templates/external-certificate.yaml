@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "awg-demoapp.fullname" . }}-external
+  labels:
+    {{- include "awg-demoapp.labels" . | nindent 4 }}
+spec:
+  commonName: {{ .Values.gateway.external.tls.commonName | quote }}
+  secretName: {{ include "awg-demoapp.fullname" . }}-external-tls
+  usages:
+    - server auth
+  dnsNames:
+{{- if .Values.gateway.external.hostnames }}
+  {{- range .Values.gateway.external.hostnames }}
+{{- if . }}
+    - {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+  issuerRef:
+    {{- .Values.gateway.external.tls.issuerRef | toYaml | nindent 4 }}
