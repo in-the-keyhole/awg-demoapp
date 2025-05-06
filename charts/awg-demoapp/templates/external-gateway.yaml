@@ -81,4 +81,18 @@ spec:
     backendRefs:
     - name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "store-master" "context" $) }}
       port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /app
+    backendRefs:
+    - name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "app" "context" $) }}
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /auth
+    backendRefs:
+    - name: {{ include "awg-demoapp.component.fullname" (dict "componentName" "auth" "context" $) }}
+      port: 80
 {{- end }}

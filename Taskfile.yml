@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  VERSION: 0.0.71
+  VERSION: 0.0.80
   DISTDIR: ./dist
   CHARTS: [ 'awg-demoapp' ]
   REPOSITORY: awgappdevlabs.azurecr.io
@@ -12,6 +12,46 @@ tasks:
   login-acr:
     cmds:
     - az acr login -n {{ .REPOSITORY }}
+
+  build-app:
+    sources:
+    - Taskfile.yml
+    - ../awg-monorepo/tools/server-mocks/app/**/*
+    generates:
+    - "{{ .DISTDIR }}/app-{{ .VERSION }}.tar"
+    cmds:
+    - pushd ../awg-monorepo/tools/server-mocks/app && npm i; popd
+    - rm -rf .temp/app/
+    - mkdir -p .temp/app/app
+    - cp -r ../awg-monorepo/tools/server-mocks/app/* .temp/app/app/
+    - tar -c -C .temp/app . -f .temp/app.tar
+    - crane append -b node:22-alpine -t {{ .VERSION }} -f .temp/app.tar -o "{{ .DISTDIR }}/app-{{ .VERSION }}.tar"
+
+  publish-app:
+    deps:
+      - build-app
+    cmds:
+      - crane push {{ .DISTDIR }}/app-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/app:{{ .VERSION }}
+
+  build-auth:
+    sources:
+    - Taskfile.yml
+    - ../awg-monorepo/tools/server-mocks/auth/**/*
+    generates:
+    - "{{ .DISTDIR }}/auth-{{ .VERSION }}.tar"
+    cmds:
+    - pushd ../awg-monorepo/tools/server-mocks/auth && npm i; popd
+    - rm -rf .temp/auth/
+    - mkdir -p .temp/auth/app
+    - cp -r ../awg-monorepo/tools/server-mocks/auth/* .temp/auth/app/
+    - tar -c -C .temp/auth . -f .temp/auth.tar
+    - crane append -b node:22-alpine -t {{ .VERSION }} -f .temp/auth.tar -o "{{ .DISTDIR }}/auth-{{ .VERSION }}.tar"
+
+  publish-auth:
+    deps:
+      - build-auth
+    cmds:
+      - crane push {{ .DISTDIR }}/auth-{{ .VERSION }}.tar {{ .REPOSITORY }}/awg-demoapp/auth:{{ .VERSION }}
 
   build-landing:
     sources:
@@ -139,6 +179,8 @@ tasks:
 
   build:
     deps:
+      - build-app
+      - build-auth
       - build-landing
       - build-store-master
       - build-caller
@@ -147,6 +189,8 @@ tasks:
 
   publish:
     deps:
+      - publish-app
+      - publish-auth
       - publish-landing
       - publish-store-master
       - publish-caller
