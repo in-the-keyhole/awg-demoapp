@@ -1,0 +1,11 @@
+apiVersion: keyvault.azure.appdev.awginc.com/v1alpha1
+kind: Vault
+metadata:
+  name: {{ include "awg-demoapp.fullname" . }}
+  labels:
+    {{- include "awg-demoapp.labels" . | nindent 4 }}
+spec:
+  applicationRef:
+    name: {{ include "awg-demoapp.fullname" . }}
+  writeConnectionSecretToRef:
+    name: {{ include "awg-demoapp.fullname" . }}-keyvault

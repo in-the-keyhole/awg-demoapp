@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: awg-sm-web
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          kubernetes: debug

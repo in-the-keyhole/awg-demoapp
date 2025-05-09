@@ -1,0 +1,1 @@
+{{ include "awg-demoapp.component.service" (dict "componentName" "auth" "context" $) }}

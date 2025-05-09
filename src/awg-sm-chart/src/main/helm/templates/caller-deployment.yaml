@@ -1,0 +1,1 @@
+{{ include "awg-demoapp.component.spring-deployment" (dict "componentName" "caller" "context" $) }}
