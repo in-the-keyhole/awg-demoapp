@@ -37,3 +37,4 @@ build/
 .task/
 .temp/
 .gradle/
+.kotlin/
