@@ -3,16 +3,16 @@
 apiVersion: database.appdev.awginc.com/v1alpha1
 kind: MSSQLDatabase
 metadata:
-  name: {{ include "awg-demoapp.fullname" . }}
+  name: {{ include "awg-storemaster.fullname" . }}
   labels:
-    {{- include "awg-demoapp.labels" . | nindent 4 }}
+    {{- include "awg-storemaster.labels" . | nindent 4 }}
 spec:
   applicationRef:
-    {{ include "awg-demoapp.fullname" . }}
+    {{ include "awg-storemaster.fullname" . }}
   size: Large
   writeNamespaceTo:
     configMap:
-      name: {{ include "awg-demoapp.fullname" . }}-properties
+      name: {{ include "awg-storemaster.fullname" . }}-properties
       key: spring.datasource.url
 
 */}}

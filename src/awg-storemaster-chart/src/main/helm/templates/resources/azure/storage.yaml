@@ -1,11 +1,11 @@
 apiVersion: storage.azure.appdev.awginc.com/v1alpha1
 kind: Account
 metadata:
-  name: {{ include "awg-demoapp.fullname" . }}
+  name: {{ include "awg-storemaster.fullname" . }}
   labels:
-    {{- include "awg-demoapp.labels" . | nindent 4 }}
+    {{- include "awg-storemaster.labels" . | nindent 4 }}
 spec:
   applicationRef:
-    name: {{ include "awg-demoapp.fullname" . }}
+    name: {{ include "awg-storemaster.fullname" . }}
   writeConnectionSecretToRef:
-    name: {{ include "awg-demoapp.fullname" . }}-storage
+    name: {{ include "awg-storemaster.fullname" . }}-storage

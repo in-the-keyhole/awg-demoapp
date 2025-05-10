@@ -1,0 +1,1 @@
+{{ include "awg-storemaster.component.spring-deployment" (dict "componentName" "api" "context" $) }}

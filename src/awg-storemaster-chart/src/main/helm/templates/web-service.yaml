@@ -1,0 +1,1 @@
+{{ include "awg-storemaster.component.service" (dict "componentName" "web" "context" $) }}
