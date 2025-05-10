@@ -1,8 +1,9 @@
-description = "awg-sm-web"
+description = "awg-storemaster-web"
 
 plugins {
     id("java")
     id("application")
+    id("buildlogic.java-conventions")
     id("org.springframework.boot") version "3.4.5"
     id("com.google.cloud.tools.jib") version "3.4.5"
     id("gg.jte.gradle") version "3.2.1"
@@ -14,8 +15,19 @@ java {
     }
 }
 
+jib {
+    container {
+        ports = listOf("8080")
+        format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.OCI
+    }
+    to {
+        image = "awg-storemaster-web"
+        tags = setOf(project.version.toString().replace("+", "_"))
+    }
+}
+
 dependencies {
-    implementation(project(":awg-sm-shared"))
+    implementation(project(":awg-storemaster-shared"))
     implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
     implementation("org.springframework.boot:spring-boot-starter-actuator:3.4.4")
     implementation("org.springframework.boot:spring-boot-starter-web:3.4.4") {

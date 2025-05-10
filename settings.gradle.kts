@@ -1,17 +1,21 @@
-rootProject.name = "awg-sm"
+rootProject.name = "awg-storemaster"
 
-include(":awg-sm-shared")
-include(":awg-sm-api")
-include(":awg-sm-web")
-include(":awg-sm-chart")
+include(":awg-storemaster-shared")
+include(":awg-storemaster-api")
+include(":awg-storemaster-web")
+include(":awg-storemaster-chart")
 
-project(":awg-sm-shared").projectDir = file("src/awg-sm-shared")
-project(":awg-sm-api").projectDir = file("src/awg-sm-api")
-project(":awg-sm-web").projectDir = file("src/awg-sm-web")
-project(":awg-sm-chart").projectDir = file("src/awg-sm-chart")
+project(":awg-storemaster-shared").projectDir = file("src/awg-storemaster-shared")
+project(":awg-storemaster-api").projectDir = file("src/awg-storemaster-api")
+project(":awg-storemaster-web").projectDir = file("src/awg-storemaster-web")
+project(":awg-storemaster-chart").projectDir = file("src/awg-storemaster-chart")
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
     }
+}
+
+pluginManagement {
+
 }

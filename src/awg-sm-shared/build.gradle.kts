@@ -1,6 +1,9 @@
+description = "awg-storemaster-shared"
+
 plugins {
     id("java")
     id("java-library")
+    id("buildlogic.java-conventions")
 }
 
 java {
@@ -8,5 +11,3 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
-
-description = "awg-sm-shared"

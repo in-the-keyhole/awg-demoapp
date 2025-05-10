@@ -1,6 +1,6 @@
 spring:
   application:
-    name: awg-sm-api
+    name: awg-storemaster-api
 logging:
   level:
     org:

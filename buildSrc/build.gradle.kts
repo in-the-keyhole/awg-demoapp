@@ -1,8 +1,12 @@
 plugins {
     `kotlin-dsl`
-    id("nebula.release") version "20.2.0"
 }
 
 repositories {
+    mavenCentral()
     gradlePluginPortal()
+}
+
+dependencies {
+    implementation("com.bisiach.gradle.gitversion-plugin:com.bisiach.gradle.gitversion-plugin.gradle.plugin:1.0.2")
 }

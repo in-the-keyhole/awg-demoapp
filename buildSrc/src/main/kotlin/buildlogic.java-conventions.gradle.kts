@@ -1,5 +1,7 @@
 plugins {
     `java-library`
+    `maven-publish`
+    id("buildlogic.common")
 }
 
 repositories {
@@ -9,9 +11,8 @@ repositories {
     }
 }
 
-group = "com.awginc.sm"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_21
+java.targetCompatibility = JavaVersion.VERSION_21
 
 publishing {
     publications.create<MavenPublication>("maven") {
