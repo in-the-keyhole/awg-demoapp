@@ -1,0 +1,49 @@
+nameOverride: ""
+fullnameOverride: ""
+
+application:
+  name: 
+  metadataLocation: northcentralus
+  defaultResourceLocation: southcentralus
+
+imagePullSecrets: []
+image:
+  repository: awgappdevlabs.azurecr.io/awg-storemaster
+  pullPolicy: IfNotPresent
+  tag: ""
+
+replicaCount: 1
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+
+nodeSelector: {}
+
+securityContext: {}
+tolerations: []
+affinity: {}
+
+gateway:
+  internal:
+    enabled: true
+    className: traefik-internal
+    annotations: {}
+    hostnames: []
+    tls:
+      commonName:
+      issuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: internal
+  external:
+    enabled: false
+    className: traefik-external
+    annotations: {}
+    hostnames: []
+    tls:
+      commonName:
+      issuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: external

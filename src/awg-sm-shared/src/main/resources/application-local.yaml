@@ -1,3 +1,0 @@
-conf:
-  servicebus:
-    endpoint: https://awg-appdev-dev-app-demoapp-2d335.servicebus.windows.net:443/

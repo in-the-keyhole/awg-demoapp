@@ -1,4 +1,4 @@
-group = "com.awginc.sm"
+group = "com.awginc.storemaster"
 
 plugins {
     id("com.bisiach.gradle.gitversion-plugin")
